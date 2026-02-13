@@ -5,7 +5,14 @@ npm v22.17.0
 
 # How to run
 
+## Production
+
 ```bash
-bun install
-bun run dev
+bun install; bun run build; bun run ./.output/server/index.mjs
+```
+
+## Development
+
+```bash
+bun --bun run dev
 ```
