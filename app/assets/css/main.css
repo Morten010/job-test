@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Satoshi", sans-serif;
+  --font-serif: "General-Sans", sans-serif;
+}
