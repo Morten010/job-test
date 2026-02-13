@@ -16,3 +16,7 @@ bun install; bun run build; bun run ./.output/server/index.mjs
 ```bash
 bun --bun run dev
 ```
+
+# Live version
+
+https://job-test-inky.vercel.app/brewery

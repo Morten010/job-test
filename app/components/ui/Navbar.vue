@@ -5,9 +5,7 @@ import navbarLinks from "@/constants/navbar";
 <template>
   <nav
     class="text-white bg-[#263A32] flex justify-between max-sm:flex-col items-center gap-5 px-[3%] py-5">
-    <NuxtLink to="/" class="md:py-5 font-bold text-xl upp">
-      Brewery finder
-    </NuxtLink>
+    <NuxtLink to="/" class="font-bold text-xl upp"> Brewery finder </NuxtLink>
     <ul class="flex gap-5">
       <li v-for="link in navbarLinks" :key="link.to">
         <NuxtLink

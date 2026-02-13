@@ -25,6 +25,12 @@ export default defineNuxtConfig({
       weights: ["300", "400", "500", "600", "700", "800", "900"],
     },
   },
+  routeRules: {
+    "/": { isr: 3600 },
+    "/brewery/**": { swr: 3600 },
+    "/brewery": { swr: 3600 },
+    "/random": { cache: false },
+  },
   leaflet: {
     markerCluster: true,
   },

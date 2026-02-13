@@ -1,19 +1,47 @@
 <script lang="ts" setup>
-const settings = ref<BreweryOptions>({
-  by_city: undefined,
-  by_country: undefined,
-  by_dist: undefined,
-  by_ids: undefined,
-  by_name: undefined,
-  by_state: undefined,
-  by_postal: undefined,
-  by_type: undefined,
-  page: undefined,
-  per_page: undefined,
-  sort: undefined,
+const route = useRoute();
+const router = useRouter();
+
+const settings = computed({
+  get: () => ({
+    by_city: route.query.by_city as string,
+    by_country: route.query.by_country as string,
+    by_dist: route.query.by_dist as string,
+    by_ids: route.query.by_ids as string,
+    by_name: route.query.by_name as string,
+    by_state: route.query.by_state as string,
+    by_postal: route.query.by_postal as string,
+    by_type: route.query.by_type as string,
+    sort: route.query.sort as string,
+  }),
+  set: (val) => {
+    const nextQuery = { ...route.query, ...val, page: "1" } as any;
+    // Remove undefined or empty values from query
+    Object.keys(nextQuery).forEach((key) => {
+      if (nextQuery[key] === undefined || nextQuery[key] === "") {
+        delete nextQuery[key];
+      }
+    });
+
+    router.push({
+      query: nextQuery,
+    });
+  },
 });
+
 const size = ref(20);
-const page = ref(1);
+const page = computed({
+  get: () => Number(route.query.page) || 1,
+  set: (val) => {
+    router.push({
+      query: {
+        ...route.query,
+        page: val.toString(),
+      },
+    });
+  },
+});
+
 const queryParams = computed(() => ({
   per_page: size.value.toString(),
   page: page.value.toString(),
@@ -65,13 +93,10 @@ const totalPages = computed(() =>
   Math.ceil(Number(currentMeta.value?.total || 0) / size.value),
 );
 
-watch(
-  settings,
-  () => {
-    page.value = 1;
-  },
-  { deep: true },
-);
+const updateFilter = (key: string, value: any) => {
+  const newSettings = { ...settings.value, [key]: value };
+  settings.value = newSettings;
+};
 
 const formatLabel = (key: any) => {
   if (typeof key !== "string") return "";
@@ -98,7 +123,8 @@ const formatLabel = (key: any) => {
         :key="`${two}-${index}`"
         :label="formatLabel(two)"
         :options="one"
-        v-model="(settings as any)[two]" />
+        :model-value="(settings as any)[two]"
+        @update:model-value="updateFilter(two as string, $event)" />
     </div>
 
     <div class="py-5">Total: {{ currentMeta?.total }}</div>
@@ -113,11 +139,13 @@ const formatLabel = (key: any) => {
     <div
       class="flex justify-center items-center gap-5 mt-8 mb-2"
       v-if="Number(currentMeta?.total) > size">
-      <UiButton @click="page--" :disabled="page <= 1 || isLoading"
+      <UiButton @click="page = page - 1" :disabled="page <= 1 || isLoading"
         >Previous</UiButton
       >
       <div>{{ page }} / {{ totalPages }}</div>
-      <UiButton @click="page++" :disabled="page >= totalPages || isLoading"
+      <UiButton
+        @click="page = page + 1"
+        :disabled="page >= totalPages || isLoading"
         >Next</UiButton
       >
     </div>

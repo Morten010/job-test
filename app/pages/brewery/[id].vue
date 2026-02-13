@@ -8,7 +8,7 @@ const { data: brewery } = await useBrewery().getSingleBrewery(
 <template>
   <div>
     <NuxtImg
-      src="/images/brewery-image.jpg"
+      src="/images/brewery-header.jpg"
       alt="brewery"
       class="max-h-[300px] min-h-[350px] w-full object-cover" />
     <div class="px-[3%] py-5">
